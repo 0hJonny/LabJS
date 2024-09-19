@@ -10,19 +10,23 @@
 <body>
 <div class="main">
     <div class="empty-state">
-        <img src="images/Logo.png" alt="Лого">
+        <img id="empty-state-logo" src="images/Logo.png" alt="Лого">
         <p>Add a task to get started</p>
     </div>
-    <div class="todo-item">
-        <label>
-            <input type="checkbox">
-        </label>
-        <div class="todo-itemq__text">Create new project</div>
-        <div>Create new project</div>
-        <button type="button" class="button-delete">
-            <img src="images/Cross.svg" alt="Удалить задачу">
-        </button>
-    </div>
+    <div class="todo-list"></div>
+    <form class="todo-create-form">
+        <div class="todo-create-form__navigation">
+            <button type="button" class="button-back">
+                <img src="images/Arrow.svg" alt="Назад">
+            </button>
+            <button type="submit" class="button-accept">
+                <img src="images/Check.svg" alt="Подтвердить">
+            </button>
+        </div>
+        <div>
+            <textarea class="todo-create-form__input" name="input-task-area" placeholder="Add New Task..." id="input-task-area" rows="1"></textarea>
+        </div>
+    </form>
 </div>
 <button type="button" class="button-add">
     <img src="images/Plus.svg" alt="Добавить задачу">

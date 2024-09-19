@@ -8,17 +8,33 @@ button {
     border: 0;
     background: transparent;
     padding: 0;
+    cursor: pointer;
 }
 
 .main {
     padding: 30px 15px;
 }
 
+.todo-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    max-height: calc(100vh - 170px);
+    overflow-y: scroll;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+    }
+}
+
 .empty-state {
     display: none;
     text-align: center;
     height: 100vh;
-    /* display: flex; */
     align-items: center;
     flex-direction: column;
     justify-content: center; 
@@ -39,22 +55,82 @@ button {
 }
 
 .todo-item {
+    display: flex;
     background: #FFF;
     padding: 15px;
+    margin: 15px 0;
     border-radius: 10px;
-    display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.todo-itemq__text {
+.todo-item__text {
+    font-weight: 600;
     width: 100%;
+    word-break: break-all;
 }
 
-.button-delete {
+.todo-item.selected .button-select {
+    background: #37D7B3;
+}
+
+.todo-item.selected .button-select img {
+    display: block;
+}
+
+.todo-item.selected .button-delete {
     background: #F80F0F;
+    display: block;
+}
+
+.todo-item .button-delete {
+    display: none;
+}
+
+.todo-item button {
     padding: 4px;
     width: 22px;
     height: 22px;
+    margin: 15px;
     border-radius: 50%;
 }
+
+.todo-item.selected .todo-item__text {
+    text-decoration: line-through;
+    color: #7D7D7D;
+    font-weight: 300;
+}
+
+.button-select img {
+    display: none;
+}
+
+.button-select {
+    background: #F0F0F0;
+}
+
+.todo-create-form
+{
+    display: none;
+    padding: 50px 40px;
+}
+
+.todo-create-form__navigation {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding-bottom: 40px;
+}
+
+.todo-create-form__input {
+    width: 100%;
+    height: calc(100vh - 170px);
+    background: transparent;
+    border: 0px;
+    outline: none;
+    resize: none;
+    font-weight: 600;
+    font-size: smaller;
+}
+
+
