@@ -6,7 +6,7 @@ const todoCreateForm = document.querySelector('.todo-create-form');
 function createTodoItem(todoText) {
     if (!todoText) return;
 
-    var todoItem = document.createElement('div');
+    let todoItem = document.createElement('div');
     todoItem.classList.add('todo-item');
     todoItem.innerHTML = `
         <button type="button" class="button-select">
@@ -24,10 +24,10 @@ function createTodoItem(todoText) {
 }
 
 todoList.addEventListener('click', (event) => {
-    var target = event.target;
+    let target = event.target;
 
-    var selectButton = target.closest('.button-select');
-    var deleteButton = target.closest('.button-delete');
+    let selectButton = target.closest('.button-select');
+    let deleteButton = target.closest('.button-delete');
 
     if (selectButton) {
         let todoItem = selectButton.closest('.todo-item');
@@ -44,8 +44,8 @@ todoList.addEventListener('click', (event) => {
 
 todoCreateForm.addEventListener('submit', (event) => {
     event.preventDefault();
-    var inputTaskArea = todoCreateForm.querySelector('#input-task-area');
-    var todoText = inputTaskArea.value.trim();
+    let inputTaskArea = todoCreateForm.querySelector('#input-task-area');
+    let todoText = inputTaskArea.value.trim();
 
     if (todoText) {
         createTodoItem(todoText);
@@ -64,12 +64,12 @@ buttonAdd.addEventListener('click', () => {
 });
 
 function saveToLocalStorage() {
-    var todoItems = Array.from(todoList.querySelectorAll('.todo-item__text')).map(todoItem => todoItem.textContent);
+    let todoItems = Array.from(todoList.querySelectorAll('.todo-item__text')).map(todoItem => todoItem.textContent);
     localStorage.setItem('todoItems', JSON.stringify(todoItems));
 }
 
 function loadFromLocalStorage() {
-    var todoItemsString = localStorage.getItem('todoItems');
+    let todoItemsString = localStorage.getItem('todoItems');
     if (todoItemsString) {
         let todoItems = JSON.parse(todoItemsString);
         todoItems.forEach(todoText => {
