@@ -3,23 +3,27 @@ const buttonAdd = document.querySelector('.button-add');
 const emptyState = document.querySelector('.empty-state');
 const todoCreateForm = document.querySelector('.todo-create-form');
 
-function createTodoItem(todoText) {
-    if (!todoText) return;
+function createTodoItem(todoItemObj) {
+    if (!todoItemObj.text) return;
 
     let todoItem = document.createElement('div');
     todoItem.classList.add('todo-item');
+    if (todoItemObj.checked) {
+        todoItem.classList.add('selected');
+    }
+
     todoItem.innerHTML = `
         <button type="button" class="button-select">
             <img src="images/Check1.svg" alt="Выбрать">
         </button>
-        <div class="todo-item__text">${todoText}</div>
+        <div class="todo-item__text">${todoItemObj.text}</div>
         <button type="button" class="button-delete">
             <img src="images/Cross.svg" alt="Удалить задачу">
         </button>
     `;
     todoList.append(todoItem);
 
-    checkViewTodoList()
+    checkViewTodoList();
     saveToLocalStorage();
 }
 
@@ -32,6 +36,7 @@ todoList.addEventListener('click', (event) => {
     if (selectButton) {
         let todoItem = selectButton.closest('.todo-item');
         todoItem.classList.toggle('selected');
+        saveToLocalStorage();
     }
 
     if (deleteButton) {
@@ -48,11 +53,12 @@ todoCreateForm.addEventListener('submit', (event) => {
     let todoText = inputTaskArea.value.trim();
 
     if (todoText) {
-        createTodoItem(todoText);
+        let todoItemObj = createTodoItemObj(todoText);
+        createTodoItem(todoItemObj);
         inputTaskArea.value = '';
+        todoCreateForm.style.display = 'none';
+        checkViewTodoList();
     }
-
-    todoCreateForm.style.display = 'none';
 });
 
 buttonAdd.addEventListener('click', () => {
@@ -63,8 +69,24 @@ buttonAdd.addEventListener('click', () => {
     todoCreateForm.querySelector('#input-task-area').focus();
 });
 
+function createTodoItemObj(todoText, checked = false) {
+    return {
+        text: todoText,
+        checked
+    };
+}
+
+function checkStatus(todoItem) {
+    return todoItem.classList.contains('selected');
+}
+
 function saveToLocalStorage() {
-    let todoItems = Array.from(todoList.querySelectorAll('.todo-item__text')).map(todoItem => todoItem.textContent);
+    let todoItems = Array.from(todoList.children).map(todoItem => {
+        return {
+            text: todoItem.querySelector('.todo-item__text').textContent,
+            checked: checkStatus(todoItem)
+        };
+    });
     localStorage.setItem('todoItems', JSON.stringify(todoItems));
 }
 
@@ -72,8 +94,8 @@ function loadFromLocalStorage() {
     let todoItemsString = localStorage.getItem('todoItems');
     if (todoItemsString) {
         let todoItems = JSON.parse(todoItemsString);
-        todoItems.forEach(todoText => {
-            createTodoItem(todoText);
+        todoItems.forEach(todoItemObj => {
+            createTodoItem(todoItemObj);
         });
     }
 }
