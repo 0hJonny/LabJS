@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="title">
+                <div class="title__btn-back">
+                    <div class="title__btn-back__icon">
+                        <img src="images/back.svg" alt="Back">
+                    </div>
+                </div>
+                <div id="title-text" class="title__text">Конвертер валют</div>
+            </div>
+        </header>
+        <main>
+            <div class="screen screen-firstScreen">
+                <div class="card__container">
+                    <div class="card__content">
+                        <div id="input-currency-btn" class="title-frame">
+                            <div class="title-frame__text">
+                                <h3 id="input-currency-short">RUB</h3>
+                                <p id="input-currency-name">Российский рубль</p>
+                            </div>
+                            <div class="title-frame__btn">
+                                <div class="title-frame__btn__icon">
+                                    <img src="images/Vector.svg" alt="Select currency">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card__content__body">
+                            <div class="body-frame">
+                                <div class="body-frame__text--active">
+                                    <p id="input-currency-value">0</p>
+                                    <p id="input-currency-symbol">RUB</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card__content">
+                        <div id="output-currency-btn" class="title-frame">
+                            <div class="title-frame__text">
+                                <h3 id="output-currency-short">USD</h3>
+                                <p id="output-currency-name">Доллар США</p>
+                            </div>
+                            <div class="title-frame__btn">
+                                <div class="title-frame__btn__icon">
+                                    <img src="images/Vector.svg" alt="Select currency">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card__content__body">
+                            <div class="body-frame">
+                                <div class="body-frame__text--inactive">
+                                    <p id="output-currency-value">0</p>
+                                    <p id="output-currency-symbol">USD</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="numpad">
+                        <div class="block block-top">
+                            <button class="numpad__btn numpad__btn__text--active">AC</button>
+                            <button class="numpad__btn numpad__btn__text--active delete-btn">
+                                <img src="images/lucide_delete.svg" alt="Delete">
+                            </button>
+                        </div>
+                        <div class="block">
+                            <button class="numpad__btn numpad__btn__text--inactive">7</button>
+                            <button class="numpad__btn numpad__btn__text--inactive">8</button>
+                            <button class="numpad__btn numpad__btn__text--inactive">9</button>
+                            <button class="numpad__btn numpad__btn__text--inactive">4</button>
+                            <button class="numpad__btn numpad__btn__text--inactive">5</button>
+                            <button class="numpad__btn numpad__btn__text--inactive">6</button>
+                            <button class="numpad__btn numpad__btn__text--inactive">1</button>
+                            <button class="numpad__btn numpad__btn__text--inactive">2</button>
+                            <button class="numpad__btn numpad__btn__text--inactive">3</button>
+                        </div>
+                        <div class="block block-bottom">
+                            <button class="numpad__btn numpad__btn__text--inactive block-bottom__btn">0</button>
+                            <button class="numpad__btn numpad__btn__text--inactive">,</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- Screen 1 -->
+            <div class="screen screen-secondScreen">
+                <div class="currency-selection">
+                    <div class="search-container">
+                        <div>
+                            <img class="search-input__search" src="images/search.svg" alt="Search">
+                        </div>
+                        <input type="text" class="search-input search-input__text" placeholder="Search currency...">
+                        <div>
+                            <img class="search-input__wipe" src="images/Wipe.svg" alt="Wipe">
+                        </div>
+                    </div>
+                    <div class="currency-list">
+                        <div id="currency-container" class="card__container">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+<script defer src="app.js"></script>
+
+</html>
