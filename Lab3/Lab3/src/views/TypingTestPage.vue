@@ -1,50 +1,47 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import ActionBar from "../components/ActionBar.vue";
 
 const router = useRouter();
 
-// Исходный текст
-const texts = [
-  "Задача организации, в особенности же рамки и место обучения кадров в значительной степени обуславливает создание направлений прогрессивного развития.",
-  "В целом, консультация с широким активом в значительной степени обуславливает важнейшие направления развития.",
-  "Значимость этих проблем настолько очевидна, что постоянное информационно-пропагандистское обеспечение нашей деятельности напрямую зависит от как формирования позиции, так и соответствующих условий активизации.",
-  "В стремлении повысить качество жизни, они забывают, что развитые страны третьего мира своими posiциями и развитым социальным обеспечением являются для них не только примером, но и конкурентом.",
-  "Таким образом, сплоченность команды профессионалов, занимающихся исключительно своей работой, - это только small часть проблемы.",
-  "Возьмем, к примеру, обширную сеть поставщиков, производителей, дистрибьюторов и других заинтересованных сторон. Их взаимодействие между собой и с покупателями влияет на качество обслуживания, а также на уровень и качество товаров и услуг.",
-  "В целом, консультация с широким активом в значительной степени обуславливает важнейшие направления развития.",
-  "В стремлении повысить качество жизни, они забывают, что развитые страны третьего мира своими posiциями и развитым социальным обеспечением являются для них не только примером, но и конкурентом.",
-  "Таким образом, сплоченность команды профессионалов, занимающихся исключительно своей работой, - это только small часть проблемы.",
-  "Возьмем, к примеру, обширную сеть поставщиков, производителей, дистрибьюторов и других заинтересованных сторон. Их взаимодействие между собой и с покупателями влияет на качество обслуживания, а также на уровень и качество товаров и услуг.",
-];
-
-const originalText = texts[Math.floor(Math.random() * texts.length)];
-
-// Линейный массив символов (включая пробелы)
-const textArray = originalText.split("");
-
-// Состояние ввода
 const userInput = ref(""); // Текст, введённый пользователем
 const currentCharIndex = ref(0); // Индекс текущего символа
 const correctCount = ref(0); // Количество правильных символов
 const errorCount = ref(0); // Количество ошибок
-
-// Таймер
 const startTime = ref(0);
 const elapsedTime = ref(0);
 const timerInterval = ref<any>(null);
 const isTestStarted = ref(false); // Тест не начат
 
-
 var isTimeMode = ref(JSON.parse(localStorage.getItem("isTimeMode") || "false"));
 var selectedOption = JSON.parse(localStorage.getItem("selectedOption") || '{"label":"15","value":"15"}');
-
-// В режиме времени: ограничение по секундам
 const maxTime = ref(Number(selectedOption.value)); // Максимальное время в секундах
-// В режиме количества слов: ограничение по словам
 const maxWords = ref(Number(selectedOption.value)); // Максимальное количество слов
 
+const originalText = ref(""); // Исходный текст
+const textArray = ref<string[]>([]); // Линейный массив символов (включая пробелы)
+
+async function fetchTextFromAPI(type = "sentence", number = 3) {
+  try {
+    const response = await fetch(`https://fish-text.ru/get?type=${type}&number=${number}&format=json`);
+    if (!response.ok) throw new Error("Ошибка при получении текста");
+    const data = await response.json();
+    if (data && data.text) {
+      originalText.value = data.text;
+      if (!isTimeMode.value)
+        textArray.value = data.text.split(" ").slice(0, selectedOption.value).join(" ");
+      else
+        textArray.value = originalText.value.split("");
+    }
+  } catch (error) {
+    console.error("Ошибка загрузки текста:", error);
+    originalText.value = "Ошибка загрузки текста. Попробуйте еще раз.";
+    textArray.value = originalText.value.split("");
+  }
+}
+
+fetchTextFromAPI();
 
 // Точность
 const accuracy = computed(() => {
@@ -60,7 +57,6 @@ function startTimer() {
   timerInterval.value = setInterval(() => {
     elapsedTime.value = Math.floor((Date.now() - startTime.value) / 1000);
 
-    // Останавливаем таймер при превышении времени
     if (isTimeMode.value && elapsedTime.value >= maxTime.value) {
       finishTest();
     }
@@ -71,16 +67,15 @@ function startTimer() {
 function stopTimer() {
   if (timerInterval.value) {
     clearInterval(timerInterval.value);
-    timerInterval.value = null; // Сбрасываем интервал
+    timerInterval.value = null;
   }
 }
 
 // Обработка ввода
 function handleInput(event: KeyboardEvent) {
-  const expectedChar = textArray[currentCharIndex.value];
+  const expectedChar = textArray.value[currentCharIndex.value];
   const userChar = event.key;
 
-  // Проверяем, нужно ли завершить тест
   if (isTimeMode.value && elapsedTime.value >= maxTime.value) {
     finishTest();
     return;
@@ -91,7 +86,6 @@ function handleInput(event: KeyboardEvent) {
     return;
   }
 
-  // Логика ввода символов
   if (!isTestStarted.value && userChar.length === 1 && userChar !== "Backspace") {
     isTestStarted.value = true;
     startTimer();
@@ -113,7 +107,7 @@ function handleInput(event: KeyboardEvent) {
 
     currentCharIndex.value++;
 
-    if (currentCharIndex.value >= textArray.length) {
+    if (currentCharIndex.value >= textArray.value.length) {
       finishTest();
     }
   }
@@ -123,10 +117,8 @@ function finishTest() {
   stopTimer();
   isTestStarted.value = false;
 
-  // Рассчитываем скорость ввода (CPM)
   const cpm = Math.round((correctCount.value / elapsedTime.value) * 60);
 
-  // Формируем объект с результатами
   const results = {
     testType: isTimeMode.value
       ? `время ${selectedOption.value}`
@@ -137,15 +129,10 @@ function finishTest() {
     errors: errorCount.value,
   };
 
-  // Сохраняем результаты в LocalStorage (или другой store)
   localStorage.setItem("testResults", JSON.stringify(results));
-
-  // Перенаправляем на страницу results
   router.push("/results");
 }
 
-
-// Сброс
 function restartTest() {
   userInput.value = "";
   currentCharIndex.value = 0;
@@ -156,12 +143,15 @@ function restartTest() {
   stopTimer();
 
   if (isTimeMode.value) {
-    maxTime.value = Number(selectedOption.value); // Сбрасываем время
+    maxTime.value = Number(selectedOption.value);
   } else {
-    maxWords.value = Number(selectedOption.value); // Сбрасываем количество слов
+    maxWords.value = Number(selectedOption.value);
   }
+
+  fetchTextFromAPI(); // Загружаем новый текст
 }
 </script>
+
 
 <template>
   <section class="typing-test-container" tabindex="0" @keydown="handleInput">
